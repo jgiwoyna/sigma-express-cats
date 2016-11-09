@@ -1,36 +1,19 @@
 var express = require('express');
 var app = express();
-var path = require('path');
 var bodyParser = require('body-parser');
+
+// routing modules
+var cats = require('./routes/cats');
+var index = require('./routes/index');
 
 // use body parser on EVERY request
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Cat data
-var cats = [
-  {
-    catName: 'Luna',
-    temperment: 'Devilish'
-  }
-];
-
 // Routes
-app.get('/cats', function(req, res) {
-  res.send(cats);
-});
-
-app.post('/cats', function(req, res) {
-  console.log('adding a new cat');
-  // console.log('req dot body', req.body);
-  cats.push(req.body);
-  res.sendStatus(201);
-});
+app.use('/cats', cats);
 
 // Static Files
-app.get('/*', function(req, res) {
-  var file = req.params[0] || '/views/index.html';
-  res.sendFile(path.join(__dirname, './public/', file));
-});
+app.use('/', index);
 
 // Set port to listen on
 app.set('port', process.env.PORT || 3000);
